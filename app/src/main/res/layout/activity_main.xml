@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:fitsSystemWindows="true"
+    android:background="?android:attr/windowBackground">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Bienvenido!"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginTop="32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Control Paucartambo"
+        android:textSize="18sp"
+        android:textColor="?attr/colorOnSurface"
+        android:layout_marginBottom="40dp" />
+
+    <!-- Botón 1: Listar -->
+    <Button
+        android:id="@+id/btnListar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Listar Asociados"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorPrimary" />
+
+    <!-- Botón 2: Asistencia -->
+    <Button
+        android:id="@+id/btnAsistencia"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Asistencia"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorPrimary" />
+
+    <!-- Botón 3: Registro de Ingresos y Egresos -->
+    <Button
+        android:id="@+id/btnIngresosEgresos"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Registro de Ingresos y Egresos"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorPrimary" />
+
+    <!-- Botón 4: Placeholder -->
+    <Button
+        android:id="@+id/btnPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Placeholder"
+        android:textSize="16sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorOutline" />
+
+</LinearLayout>

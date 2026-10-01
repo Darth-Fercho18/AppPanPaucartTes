@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores para el Modo Claro -->
+    <color name="mi_color_primario">#1E88E5</color> <!-- azul -->
+    <color name="mi_color_fondo">#F0F2F5</color> <!-- fondo gris claro -->
+
+    <!-- Superficie blanca pura para tarjetas/diálogos sobre fondo gris -->
+    <color name="mi_color_tarjeta">#FFFFFF</color>
+
+    <!-- Color de texto principal casi negro para lectura clara -->
+    <color name="mi_color_texto_principal">#212121</color>
+</resources>

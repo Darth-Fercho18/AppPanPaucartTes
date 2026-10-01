@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Opciones de Estado de Asistencia -->
+    <string-array name="opciones_asistencia">
+        <item>Seleccionar...</item>
+        <item>ASISTIO</item>
+        <item>FALTO</item>
+        <item>JUSTIFICO</item>
+        <item>TARDANZA</item>
+        <item>DISPENSA MEDICA</item>
+        <item>DISPENSA EXTRAORDINARIA</item>
+    </string-array>
+
+    <!-- Opciones de Filtro de Socio (Sin la opción "TODOS") -->
+    <string-array name="opciones_filtro_asistencia">
+        <item>Seleccione tipo de socio...</item>
+        <item>FILA</item>
+        <item>NIÑOS</item>
+        <item>EX INTEGRANTE</item>
+    </string-array>
+</resources>

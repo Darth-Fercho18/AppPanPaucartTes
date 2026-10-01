@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores para el Modo Oscuro -->
+    <!-- En modo oscuro, se recomienda usar colores primarios un poco más claros/pastel para que resalten -->
+    <color name="mi_color_primario">#90CAF9</color>
+
+    <!-- Un fondo oscuro para la aplicación -->
+    <color name="mi_color_fondo">#121212</color>
+
+    <!-- Superficie elevada para tarjetas/diálogos en modo oscuro -->
+    <color name="mi_color_tarjeta">#1E1E1E</color>
+
+    <!-- Color de texto principal con alto contraste y buena legibilidad nocturna -->
+    <color name="mi_color_texto_principal">#E0E0E0</color>
+</resources>

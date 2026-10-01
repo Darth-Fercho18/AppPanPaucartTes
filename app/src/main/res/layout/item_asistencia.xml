@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/mi_color_tarjeta"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Nombre: Mantiene el color primario global de la app -->
+        <TextView
+            android:id="@+id/tvNombreAsistencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NOMBRE DEL ASOCIADO"
+            android:textColor="@color/mi_color_primario"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- DNI: Usa el color de texto principal global -->
+        <TextView
+            android:id="@+id/tvDniAsistencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:text="DNI: 00000000"
+            android:textColor="@color/mi_color_texto_principal"
+            android:textSize="14sp" />
+
+        <!-- Contenedor del Spinner de Estados -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_spinner"
+            android:padding="2dp">
+
+            <Spinner
+                android:id="@+id/spEstadoAsistencia"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:entries="@array/opciones_asistencia"
+                android:popupBackground="@color/mi_color_tarjeta"
+                android:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
