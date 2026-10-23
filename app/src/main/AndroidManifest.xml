@@ -34,6 +34,31 @@
             android:name=".AgregarAsociadoActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CobrosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MovimientosActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ListarMovimientosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CuotasExtraordinariasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ComprobanteMovimientoActivity"
+            android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

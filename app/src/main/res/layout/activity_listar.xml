@@ -1,94 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/background_gray">
 
+    <!-- Cabecera Verde -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="16dp">
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="@color/primary_green">
 
         <TextView
-            android:id="@+id/tvTituloApp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Integrantes"
-            android:textColor="?attr/colorOnPrimary"
+            android:layout_height="wrap_content"
+            android:text="Padrón de Integrantes"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <!-- Tu botón existente para agregar socio -->
         <ImageButton
             android:id="@+id/btnAgregarAsociado"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Agregar Asociado"
-            android:src="@android:drawable/ic_input_add"
-            app:tint="?attr/colorOnPrimary" />
+            android:src="@android:drawable/ic_menu_add"
+            app:tint="@color/white" />
     </LinearLayout>
 
+    <!-- Sección de Filtro y Búsqueda -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="?attr/colorSurface"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:strokeWidth="0dp">
+        app:cardCornerRadius="8dp"
+        app:cardElevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:text="Filtrar por tipo:"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_spinner"
-                android:padding="2dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filtrar por tipo:"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="12dp"/>
 
                 <Spinner
                     android:id="@+id/spFiltroTipo"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:popupBackground="@color/mi_color_tarjeta"
-                    android:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
-                    android:spinnerMode="dropdown" />
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primary_green" />
             </LinearLayout>
+
+            <!-- Búsqueda por Nombre o DNI -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Buscar por Nombre o DNI"
+                app:boxStrokeColor="@color/primary_green"
+                app:hintTextColor="@color/primary_green">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBuscarSocio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Tu RecyclerView existente -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAsociados"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="20dp" />
+        android:paddingBottom="16dp" />
 
 </LinearLayout>

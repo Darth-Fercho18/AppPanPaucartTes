@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Colores para el Modo Oscuro -->
-    <!-- En modo oscuro, se recomienda usar colores primarios un poco más claros/pastel para que resalten -->
-    <color name="mi_color_primario">#90CAF9</color>
+    <!-- Colores Principales (Modo Oscuro) -->
+    <!-- Usamos un verde ligeramente más claro y vibrante para que contraste bien con el fondo oscuro -->
+    <color name="primary_green">#4CAF50</color>
+    <color name="primary_green_light">#81C784</color>
+    <color name="accent_blue">#64B5F6</color>
 
-    <!-- Un fondo oscuro para la aplicación -->
+    <!-- Fondos y Superficies -->
+    <!-- background_gray será casi negro (estándar de Material Design) -->
+    <color name="background_gray">#121212</color>
+    <!-- surface_white será un gris oscuro para que las tarjetas resalten un poco sobre el fondo -->
+    <color name="surface_white">#1E1E1E</color>
+
+    <!-- Textos -->
+    <!-- Usamos un blanco suave (no puro) para no cansar la vista en la oscuridad -->
+    <color name="text_primary">#E0E0E0</color>
+    <color name="text_secondary">#9E9E9E</color>
+    <color name="danger_red">#EF5350</color>
+    <color name="white">#FFFFFF</color>
+    <color name="warning_orange">#FFA726</color>
+
+    <!-- Colores antiguos (por si aún no has migrado algunas pantallas antiguas) -->
+    <color name="mi_color_primario">#4CAF50</color>
     <color name="mi_color_fondo">#121212</color>
-
-    <!-- Superficie elevada para tarjetas/diálogos en modo oscuro -->
     <color name="mi_color_tarjeta">#1E1E1E</color>
-
-    <!-- Color de texto principal con alto contraste y buena legibilidad nocturna -->
     <color name="mi_color_texto_principal">#E0E0E0</color>
 </resources>

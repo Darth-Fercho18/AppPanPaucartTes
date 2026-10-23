@@ -11,9 +11,9 @@
         <item>DISPENSA EXTRAORDINARIA</item>
     </string-array>
 
-    <!-- Opciones de Filtro de Socio (Sin la opción "TODOS") -->
+    <!-- Opciones de Filtro de Integrante -->
     <string-array name="opciones_filtro_asistencia">
-        <item>Seleccione tipo de socio...</item>
+        <item>Seleccione tipo de integrante...</item>
         <item>FILA</item>
         <item>NIÑOS</item>
         <item>EX INTEGRANTE</item>

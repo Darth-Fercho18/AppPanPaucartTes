@@ -1,257 +1,390 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mi_color_fondo"
-    android:fillViewport="true"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/background_gray">
 
+    <!-- Cabecera Verde -->
     <LinearLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/primary_green"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Encabezado con Color Primario Global -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvTituloFormulario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/mi_color_primario"
-            android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="18dp">
+            android:text="Registrar Nuevo Integrante"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Registrar Nuevo Asociado"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
-            <!-- DATOS PERSONALES -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="DATOS PERSONALES"
-                android:textColor="@color/mi_color_primario"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <!-- DNI -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <!-- TARJETA 1: DATOS PERSONALES -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="DNI (8 dígitos)"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:counterEnabled="true"
-                app:counterMaxLength="8"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDni"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="8"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <!-- Nombres -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DATOS PERSONALES"
+                        android:textColor="@color/primary_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- DNI -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="DNI (8 dígitos)"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="8"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDni"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="8" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Nombres -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Nombres"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNombres"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Apellidos en una sola fila -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:baselineAligned="false">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:hint="Ap. Paterno"
+                            app:boxStrokeColor="@color/primary_green"
+                            app:hintTextColor="@color/primary_green">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etApellidoPaterno"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapWords" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:hint="Ap. Materno"
+                            app:boxStrokeColor="@color/primary_green"
+                            app:hintTextColor="@color/primary_green">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etApellidoMaterno"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapWords" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- Sexo -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SEXO"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_spinner"
+                        android:padding="2dp"
+                        android:layout_marginBottom="12dp">
+
+                        <Spinner
+                            android:id="@+id/spSexo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="@color/primary_green"/>
+                    </LinearLayout>
+
+                    <!-- Año Nacimiento & Año Ingreso -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:baselineAligned="false">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:hint="Fecha Nacimiento"
+                            app:boxStrokeColor="@color/primary_green"
+                            app:hintTextColor="@color/primary_green">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etFechaNacimiento"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="false"
+                                android:clickable="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:hint="Año Ingreso"
+                            app:boxStrokeColor="@color/primary_green"
+                            app:hintTextColor="@color/primary_green">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etAnioIngreso"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:maxLength="4" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- Tipo de Integrante -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TIPO DE INTEGRANTE *"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_spinner"
+                        android:padding="2dp">
+
+                        <Spinner
+                            android:id="@+id/spTipoSocioGuardar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="@color/primary_green"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TARJETA 2: APODERADO (PARA NIÑOS U OTROS) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardApoderado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Nombres"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNombres"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <!-- Apellido Paterno -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DATOS DEL APODERADO (OPCIONAL)"
+                        android:textColor="@color/primary_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Nombre Apoderado -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Nombre del Apoderado"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNombreApoderado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Celular Apoderado -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Celular del Apoderado"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCelularApoderado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TARJETA 3: CONTACTO -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Apellido Paterno"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellidoPaterno"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <!-- Apellido Materno -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:hint="Apellido Materno"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="INFORMACIÓN DE CONTACTO (OPCIONAL)"
+                        android:textColor="@color/primary_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellidoMaterno"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    <!-- Celular -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Celular"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
 
-            <!-- TIPO DE SOCIO -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:text="TIPO DE SOCIO *"
-                android:textColor="@color/mi_color_primario"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCelular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="22dp"
-                android:background="@drawable/bg_spinner"
-                android:padding="2dp">
+                    <!-- Correo -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Correo Electrónico"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
 
-                <Spinner
-                    android:id="@+id/spTipoSocioGuardar"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCorreo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- INFORMACIÓN DE CONTACTO -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="INFORMACIÓN DE CONTACTO (OPCIONAL)"
-                android:textColor="@color/mi_color_primario"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                    <!-- Dirección -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Dirección"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
 
-            <!-- Celular -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Celular"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCelular"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Correo Electrónico -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Correo Electrónico"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCorreo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Dirección -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="28dp"
-                android:hint="Dirección"
-                app:boxStrokeColor="@color/mi_color_primario"
-                app:hintTextColor="@color/mi_color_primario"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDireccion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDireccion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPostalAddress" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Botón Guardar -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuardarAsociado"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:backgroundTint="@color/mi_color_primario"
-                android:text="GUARDAR ASOCIADO"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
+                android:text="GUARDAR INTEGRANTE"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                app:cornerRadius="16dp"
-                app:elevation="4dp" />
+                app:backgroundTint="@color/primary_green"
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

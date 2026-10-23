@@ -30,6 +30,7 @@ class AsistenciaActivity : AppCompatActivity() {
 
     private lateinit var spActividad: Spinner
     private lateinit var spFiltroTipoAsistencia: Spinner
+    private lateinit var etBuscarAsistencia: TextInputEditText
     private lateinit var rvAsistencia: RecyclerView
     private lateinit var btnGuardarAsistencia: Button
     private lateinit var btnAgregarActividad: Button
@@ -39,6 +40,7 @@ class AsistenciaActivity : AppCompatActivity() {
     private lateinit var adapter: AsistenciaAdapter
     private var listaActividades: List<Actividad> = emptyList()
     private var listaTodosLosAsociados: List<Asociado> = emptyList()
+    private var listaCompletaActual: List<AsistenciaItem> = emptyList()
 
     // Bandera vital para detener el disparo automático de los Spinners de Android
     private var spinnersListos = false
@@ -49,6 +51,7 @@ class AsistenciaActivity : AppCompatActivity() {
 
         spActividad = findViewById(R.id.spActividad)
         spFiltroTipoAsistencia = findViewById(R.id.spFiltroTipoAsistencia)
+        etBuscarAsistencia = findViewById(R.id.etBuscarAsistencia)
         rvAsistencia = findViewById(R.id.rvAsistencia)
         btnGuardarAsistencia = findViewById(R.id.btnGuardarAsistencia)
         btnAgregarActividad = findViewById(R.id.btnAgregarActividad)
@@ -58,6 +61,14 @@ class AsistenciaActivity : AppCompatActivity() {
         rvAsistencia.layoutManager = LinearLayoutManager(this)
         adapter = AsistenciaAdapter(emptyList())
         rvAsistencia.adapter = adapter
+
+        etBuscarAsistencia.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                filtrarPorBusqueda(s.toString())
+            }
+        })
 
         btnGuardarAsistencia.setOnClickListener { enviarAsistencia() }
         btnAgregarActividad.setOnClickListener { mostrarDialogoAgregarActividad() }
@@ -92,12 +103,12 @@ class AsistenciaActivity : AppCompatActivity() {
 
                     descargarActividadesDespues()
                 } else {
-                    tvEstadoCarga.text = "Error HTTP al cargar socios: ${response.code()}"
+                    tvEstadoCarga.text = "Error HTTP al cargar integrantes: ${response.code()}"
                 }
             }
 
             override fun onFailure(call: Call<List<Asociado>>, t: Throwable) {
-                tvEstadoCarga.text = "Fallo de red en socios: ${t.message}"
+                tvEstadoCarga.text = "Fallo de red en integrantes: ${t.message}"
             }
         })
     }
@@ -122,11 +133,15 @@ class AsistenciaActivity : AppCompatActivity() {
                         tvEstadoCarga.text = "No hay actividades. Presione '+' para crear una."
                     } else {
                         tvEstadoCarga.text = "Todo listo. Seleccione una opción."
+                        if (spFiltroTipoAsistencia.selectedItemPosition <= 0) {
+                            spFiltroTipoAsistencia.setSelection(1) // Selecciona "FILA" por defecto
+                        }
                     }
 
                     // SOLO CUANDO TODO ESTÁ DESCARGADO Y DIBUJADO, ACTIVAMOS LOS LECTORES
                     spinnersListos = true
                     configurarFiltroSocio()
+                    verificarYTraerDatos()
 
                 } else {
                     tvEstadoCarga.text = "Error HTTP en actividades: ${response.code()}"
@@ -165,14 +180,18 @@ class AsistenciaActivity : AppCompatActivity() {
         val actividadSeleccionada = spActividad.selectedItem as? Actividad
         val posicionFiltro = spFiltroTipoAsistencia.selectedItemPosition
 
-        if (actividadSeleccionada != null && posicionFiltro > 0) {
-            val tipoSocio = spFiltroTipoAsistencia.selectedItem.toString()
-            tvEstadoCarga.text = "Buscando registro anterior de $tipoSocio..."
+        if (actividadSeleccionada != null) {
+            val tipoSocio = if (posicionFiltro > 0) {
+                spFiltroTipoAsistencia.selectedItem.toString()
+            } else {
+                "FILA"
+            }
+            tvEstadoCarga.text = "Cargando asistencia para $tipoSocio..."
 
             cargarSoloAsistencias(tipoSocio, actividadSeleccionada.idActividad)
         } else {
             adapter.actualizarLista(emptyList())
-            tvEstadoCarga.text = "Seleccione una actividad y un tipo de socio."
+            tvEstadoCarga.text = "Seleccione una actividad válida."
         }
     }
 
@@ -194,20 +213,34 @@ class AsistenciaActivity : AppCompatActivity() {
 
                 val asociadosFiltrados = listaTodosLosAsociados.filter { it.idTipo == idTipoBuscado }
 
-                val listaParaPantalla = asociadosFiltrados.map { asociado ->
+                listaCompletaActual = asociadosFiltrados.map { asociado ->
                     val registroEncontrado = asistenciasPrevias.find { it.idAsociado == asociado.idAsociado }
                     val estadoInicial = registroEncontrado?.estado ?: "Seleccionar..."
                     AsistenciaItem(asociado, estadoInicial)
                 }
 
-                adapter.actualizarLista(listaParaPantalla)
-                tvEstadoCarga.text = "Lista de $tipoSocio (${listaParaPantalla.size} personas)"
+                filtrarPorBusqueda(etBuscarAsistencia.text.toString())
+                tvEstadoCarga.text = "Lista de $tipoSocio (${listaCompletaActual.size} personas)"
             }
 
             override fun onFailure(call: Call<List<Asistencia>>, t: Throwable) {
                 tvEstadoCarga.text = "Error al conectar por asistencias: ${t.message}"
             }
         })
+    }
+
+    private fun filtrarPorBusqueda(query: String) {
+        val q = query.trim().lowercase(Locale.ROOT)
+        val listaFiltrada = if (q.isEmpty()) {
+            listaCompletaActual
+        } else {
+            listaCompletaActual.filter { item ->
+                val nombreCompleto = "${item.asociado.nombres} ${item.asociado.apellidoPaterno} ${item.asociado.apellidoMaterno}".lowercase(Locale.ROOT)
+                val dni = item.asociado.dni.lowercase(Locale.ROOT)
+                nombreCompleto.contains(q) || dni.contains(q)
+            }
+        }
+        adapter.actualizarLista(listaFiltrada)
     }
 
     private fun enviarAsistencia() {
@@ -221,30 +254,47 @@ class AsistenciaActivity : AppCompatActivity() {
         val marcados = datosEnPantalla.filter { it.estadoSeleccionado != "Seleccionar..." }
 
         if (marcados.isEmpty()) {
-            Toast.makeText(this, "No ha marcado la asistencia de ningún socio.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No ha marcado la asistencia de ningún integrante.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val payload = marcados.map {
-            Asistencia(
-                idActividad = actividadSeleccionada.idActividad,
-                idAsociado = it.asociado.idAsociado,
-                estado = it.estadoSeleccionado
-            )
-        }
+        btnGuardarAsistencia.isEnabled = false
+        var completadas = 0
+        var errores = 0
 
-        RetrofitClient.getApiService().guardarAsistencias(payload).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@AsistenciaActivity, "Asistencia guardada con éxito", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this@AsistenciaActivity, "Error al guardar en el servidor", Toast.LENGTH_SHORT).show()
+        for (item in marcados) {
+            val apiService = RetrofitClient.getApiService()
+            apiService.registrarAsistencia(
+                idActividad = actividadSeleccionada.idActividad,
+                idAsociado = item.asociado.idAsociado,
+                estado = item.estadoSeleccionado
+            ).enqueue(object : Callback<RespuestaBase> {
+                override fun onResponse(call: Call<RespuestaBase>, response: Response<RespuestaBase>) {
+                    completadas++
+                    if (!response.isSuccessful) {
+                        errores++
+                    }
+
+                    if (completadas == marcados.size) {
+                        btnGuardarAsistencia.isEnabled = true
+                        if (errores == 0) {
+                            Toast.makeText(this@AsistenciaActivity, "¡Asistencias guardadas con éxito!", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(this@AsistenciaActivity, "Guardado completado con $errores errores.", Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
-            }
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(this@AsistenciaActivity, "Error de red: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+
+                override fun onFailure(call: Call<RespuestaBase>, t: Throwable) {
+                    completadas++
+                    errores++
+                    if (completadas == marcados.size) {
+                        btnGuardarAsistencia.isEnabled = true
+                        Toast.makeText(this@AsistenciaActivity, "Error de red al guardar asistencias.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+        }
     }
 
     private fun mostrarDialogoAgregarActividad() {
@@ -265,9 +315,10 @@ class AsistenciaActivity : AppCompatActivity() {
             val cal = Calendar.getInstance()
             DatePickerDialog(
                 this,
-                { _, year, month, dayOfMonth ->
-                    val fechaSeleccionada = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year)
-                    etFecha.setText(fechaSeleccionada)
+                { _, year, month, day ->
+                    val calSelected = Calendar.getInstance()
+                    calSelected.set(year, month, day)
+                    etFecha.setText(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calSelected.time))
                 },
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
@@ -275,35 +326,32 @@ class AsistenciaActivity : AppCompatActivity() {
             ).show()
         }
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle("✨ Nueva Actividad")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("➕ Nueva Actividad")
             .setView(view)
             .setPositiveButton("Guardar", null)
             .setNegativeButton("Cancelar") { d, _ -> d.dismiss() }
             .create()
+            .apply {
+                window?.setBackgroundDrawableResource(R.drawable.bg_dialog_redondeado)
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    val nombre = etNombre.text.toString().trim()
+                    val fechaIngresadaUI = etFecha.text.toString().trim()
+                    val multaFalta = etMultaFalta.text.toString().trim().toDoubleOrNull() ?: 0.0
+                    val multaTardanza = etMultaTardanza.text.toString().trim().toDoubleOrNull() ?: 0.0
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_redondeado)
+                    if (nombre.isEmpty() || fechaIngresadaUI.isEmpty()) {
+                        Toast.makeText(this@AsistenciaActivity, "Error: Nombre y fecha requeridos", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val nombre = etNombre.text.toString().trim()
-            val fechaIngresadaUI = etFecha.text.toString().trim()
-            val multaFalta = etMultaFalta.text.toString().trim().toDoubleOrNull() ?: 0.0
-            val multaTardanza = etMultaTardanza.text.toString().trim().toDoubleOrNull() ?: 0.0
-
-            if (nombre.isEmpty() || fechaIngresadaUI.isEmpty()) {
-                Toast.makeText(this, "Por favor complete nombre y fecha", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                    val fechaParaBD = formatearFechaParaBD(fechaIngresadaUI)
+                    guardarNuevaActividad(nombre, fechaParaBD, multaFalta, multaTardanza, this)
+                }
             }
-
-            // Convertimos la fecha (DD/MM/YYYY) a formato BD (YYYY-MM-DD) antes de enviar
-            val fechaParaBD = formatearFechaParaBD(fechaIngresadaUI)
-
-            guardarNuevaActividad(nombre, fechaParaBD, multaFalta, multaTardanza, dialog)
-        }
     }
 
-    // --- NUEVO DIÁLOGO PARA EDITAR LA ACTIVIDAD SELECCIONADA ---
     private fun mostrarDialogoEditarActividad(actividad: Actividad) {
         val view = layoutInflater.inflate(R.layout.dialog_agregar_actividad, null)
         val etNombre = view.findViewById<EditText>(R.id.etNombreActividad)
@@ -311,7 +359,6 @@ class AsistenciaActivity : AppCompatActivity() {
         val etMultaFalta = view.findViewById<EditText>(R.id.etMultaFalta)
         val etMultaTardanza = view.findViewById<EditText>(R.id.etMultaTardanza)
 
-        // Prellenamos los campos con los datos actuales
         etNombre.setText(actividad.nombreActividad)
         etFecha.setText(formatearFechaParaMostrar(actividad.fechaActividad))
         etMultaFalta.setText(actividad.multaPorFalta.toString())
@@ -323,9 +370,10 @@ class AsistenciaActivity : AppCompatActivity() {
             val cal = Calendar.getInstance()
             DatePickerDialog(
                 this,
-                { _, year, month, dayOfMonth ->
-                    val fechaSeleccionada = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year)
-                    etFecha.setText(fechaSeleccionada)
+                { _, year, month, day ->
+                    val calSelected = Calendar.getInstance()
+                    calSelected.set(year, month, day)
+                    etFecha.setText(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calSelected.time))
                 },
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
@@ -380,181 +428,142 @@ class AsistenciaActivity : AppCompatActivity() {
         }
     }
 
-    private fun guardarNuevaActividad(nombre: String, fecha: String, multaFalta: Double, multaTardanza: Double, dialog: AlertDialog) {
-        RetrofitClient.getApiService().agregarActividad(nombre, fecha, multaFalta, multaTardanza).enqueue(object : Callback<Void> {
+    private fun guardarNuevaActividad(nombreNombres: String, fecha: String, multaFalta: Double, multaTardanza: Double, dialog: AlertDialog) {
+        RetrofitClient.getApiService().agregarActividad(nombreNombres, fecha, multaFalta, multaTardanza).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@AsistenciaActivity, "Actividad creada con éxito", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
-                    descargarActividadesDespues() // Refrescamos las actividades
+                    descargarActividadesDespues()
                 } else {
                     Toast.makeText(this@AsistenciaActivity, "Error al guardar la actividad", Toast.LENGTH_SHORT).show()
                 }
             }
+
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Toast.makeText(this@AsistenciaActivity, "Error de red: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    // --- CONFIGURACIÓN DEL GESTO SWIPE ---
     private fun configurarGestoDeslizar() {
-        val swipeHandler = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean = false
+        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val posicion = viewHolder.bindingAdapterPosition
+                val position = viewHolder.bindingAdapterPosition
+                rvAsistencia.adapter?.notifyItemChanged(position)
 
-                if (posicion != RecyclerView.NO_POSITION) {
-                    val item = adapter.obtenerDatosAsistencia()[posicion]
-                    val estado = item.estadoSeleccionado.trim().uppercase()
+                val actividadSeleccionada = spActividad.selectedItem as? Actividad
+                if (actividadSeleccionada == null) {
+                    Toast.makeText(this@AsistenciaActivity, "Seleccione una actividad primero", Toast.LENGTH_SHORT).show()
+                    return
+                }
 
-                    val actividadSeleccionada = spActividad.selectedItem as? Actividad
-                    val nombreActividad = actividadSeleccionada?.toString() ?: "Actividad actual"
-                    val idActividad = actividadSeleccionada?.idActividad ?: 0
-
-                    when (estado) {
-                        "ASISTIO", "DISPENSA MEDICA", "DISPENSA EXTRAORDINARIA" -> {
-                            mostrarDialogoSinMulta(item, nombreActividad)
-                        }
-                        "FALTO", "TARDANZA", "JUSTIFICO" -> {
-                            consultarYMostrarMulta(item, idActividad, nombreActividad)
-                        }
-                        else -> {
-                            Toast.makeText(this@AsistenciaActivity, "Selecciona primero un estado de asistencia", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    // Regresamos suavemente la tarjeta deslizada
-                    adapter.notifyItemChanged(posicion)
+                val datosActuales = adapter.obtenerDatosAsistencia()
+                if (position != RecyclerView.NO_POSITION && position < datosActuales.size) {
+                    val item = datosActuales[position]
+                    consultarYMostrarMulta(item, actividadSeleccionada.idActividad, actividadSeleccionada.nombreActividad)
                 }
             }
         }
-
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(rvAsistencia)
+        ItemTouchHelper(callback).attachToRecyclerView(rvAsistencia)
     }
 
-    // 1. Diálogo Sin Multa
-    private fun mostrarDialogoSinMulta(item: AsistenciaItem, nombreActividad: String) {
-        val nombreCompleto = "${item.asociado.nombres} ${item.asociado.apellidoPaterno} ${item.asociado.apellidoMaterno}"
-
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle("🟢 Detalles")
-            .setMessage("El asociado:\n$nombreCompleto\n\nNO REGISTRA MULTA en:\n📌 $nombreActividad")
-            .setPositiveButton("Aceptar", null)
-            .create()
-
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_redondeado)
-    }
-
-    // 2. Diálogo Detalle de Multa
     private fun consultarYMostrarMulta(item: AsistenciaItem, idActividad: Int, nombreActividad: String) {
         val idAsociado = item.asociado.idAsociado
         val nombreCompleto = "${item.asociado.nombres} ${item.asociado.apellidoPaterno} ${item.asociado.apellidoMaterno}"
 
-        if (idActividad == 0) {
-            Toast.makeText(this, "Seleccione una actividad válida primero.", Toast.LENGTH_SHORT).show()
-            return
-        }
+        tvEstadoCarga.text = "Consultando multa de $nombreCompleto..."
 
-        RetrofitClient.getApiService().obtenerMulta(idAsociado, idActividad).enqueue(object : Callback<RespuestaMulta> {
-            override fun onResponse(call: Call<RespuestaMulta>, response: Response<RespuestaMulta>) {
-                if (response.isSuccessful && response.body()?.success == true) {
-                    val multa = response.body()!!.multa!!
-
-                    // Convertimos la fecha devuelta por la BD a formato DD/MM/YYYY
-                    val fechaPagoFormateada = formatearFechaParaMostrar(multa.fechaPago)
-
-                    val detalleMensaje = """
-                        👤 Asociado: $nombreCompleto
-                        📌 Actividad: $nombreActividad
-                        🏷️ Estado Asistencia: ${item.estadoSeleccionado}
-                        
-                        ────────────────────────
-                        💰 Detalle de la Multa:
-                        • Monto Total: S/ ${multa.montoTotal}
-                        • Monto Pagado: S/ ${multa.montoPagado}
-                        • Estado de Pago: ${multa.estado}
-                        ${if (fechaPagoFormateada.isNotEmpty()) "• Fecha de Pago: $fechaPagoFormateada" else ""}
-                    """.trimIndent()
-
-                    val dialog = MaterialAlertDialogBuilder(this@AsistenciaActivity)
-                        .setTitle("🔴 Detalle de Multa")
-                        .setMessage(detalleMensaje)
-                        .setPositiveButton("Cerrar", null)
-                        .setNeutralButton("Editar Descuento") { _, _ ->
-                            mostrarDialogoEditarDescuento(multa, item, idActividad, nombreActividad)
-                        }
-                        .create()
-
-                    dialog.show()
-                    dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_redondeado)
-
+        RetrofitClient.getApiService().obtenerCuotasAsociado(idAsociado, 3).enqueue(object : Callback<List<DeudaPendiente>> {
+            override fun onResponse(call: Call<List<DeudaPendiente>>, response: Response<List<DeudaPendiente>>) {
+                tvEstadoCarga.text = "Lista cargada."
+                if (response.isSuccessful && response.body() != null) {
+                    val cuotas = response.body()!!
+                    val cuotaMulta = cuotas.find { it.idActividad == idActividad }
+                    if (cuotaMulta != null) {
+                        mostrarDialogoDetalleCuotaMulta(cuotaMulta, item, idActividad, nombreActividad, nombreCompleto)
+                    } else {
+                        mostrarDialogoSinMulta(nombreCompleto, nombreActividad)
+                    }
                 } else {
-                    val dialog = MaterialAlertDialogBuilder(this@AsistenciaActivity)
-                        .setTitle("⚠️ Multa Pendiente")
-                        .setMessage("El asociado $nombreCompleto tiene el estado de '${item.estadoSeleccionado}'.\n\nGuarda la asistencia para generar el registro formal de la multa en el sistema.")
-                        .setPositiveButton("Entendido", null)
-                        .create()
-
-                    dialog.show()
-                    dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_redondeado)
+                    mostrarDialogoSinMulta(nombreCompleto, nombreActividad)
                 }
             }
 
-            override fun onFailure(call: Call<RespuestaMulta>, t: Throwable) {
+            override fun onFailure(call: Call<List<DeudaPendiente>>, t: Throwable) {
+                tvEstadoCarga.text = "Lista cargada."
                 Toast.makeText(this@AsistenciaActivity, "Error al consultar multa: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    // 3. Diálogo Editar Descuento
-    private fun mostrarDialogoEditarDescuento(multa: Multa, item: AsistenciaItem, idActividad: Int, nombreActividad: String) {
+    private fun mostrarDialogoSinMulta(nombreSocio: String, nombreActividad: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("ℹ️ Sin Multa Registrada")
+            .setMessage("El integrante:\n$nombreSocio\n\nNo registra ninguna multa en la actividad:\n📌 $nombreActividad")
+            .setPositiveButton("Aceptar") { d, _ -> d.dismiss() }
+            .show()
+    }
+
+    private fun mostrarDialogoDetalleCuotaMulta(cuota: DeudaPendiente, item: AsistenciaItem, idActividad: Int, nombreActividad: String, nombreSocio: String) {
+        val mensaje = "Integrante: $nombreSocio\n" +
+                "Actividad: $nombreActividad\n" +
+                "Concepto: ${cuota.concepto}\n" +
+                "Monto Original: S/ ${cuota.montoOriginal ?: 0.0}\n" +
+                "Descuento: S/ ${cuota.descuento ?: 0.0}\n" +
+                "Monto Total: S/ ${cuota.montoTotal ?: 0.0}\n" +
+                "Monto Pagado: S/ ${cuota.montoPagado ?: 0.0}\n" +
+                "Saldo Pendiente: S/ ${cuota.monto}\n" +
+                "Estado: ${cuota.estado ?: "PENDIENTE"}"
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("🔴 Detalle de Multa")
+            .setMessage(mensaje)
+            .setPositiveButton("Editar Descuento") { _, _ ->
+                mostrarDialogoEditarDescuentoCuota(cuota, item, idActividad, nombreActividad)
+            }
+            .setNegativeButton("Cerrar") { d, _ -> d.dismiss() }
+            .show()
+    }
+
+    private fun mostrarDialogoEditarDescuentoCuota(cuota: DeudaPendiente, item: AsistenciaItem, idActividad: Int, nombreActividad: String) {
         val view = layoutInflater.inflate(R.layout.dialog_editar_descuento, null)
         val etDescuento = view.findViewById<TextInputEditText>(R.id.etDescuentoDialog)
+        etDescuento.setText(cuota.descuento?.toString() ?: "0.00")
 
-        etDescuento.setText(multa.descuento.toString())
-
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle("✏️ Editar Descuento")
-            .setMessage("Ingrese el descuento para ${item.asociado.nombres}:")
+        MaterialAlertDialogBuilder(this)
+            .setTitle("✏️ Modificación Especial (Descuento)")
             .setView(view)
-            .setPositiveButton("Guardar") { d, _ ->
-                val nuevoDescuentoTexto = etDescuento.text.toString().trim()
-                val nuevoDescuento = nuevoDescuentoTexto.toDoubleOrNull()
+            .setPositiveButton("Aplicar") { _, _ ->
+                val nuevoDescuentoStr = etDescuento.text.toString().trim()
+                val nuevoDescuento = nuevoDescuentoStr.toDoubleOrNull() ?: 0.0
 
-                if (nuevoDescuento == null || nuevoDescuento < 0) {
-                    Toast.makeText(this, "Monto de descuento no válido", Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-
-                RetrofitClient.getApiService().actualizarDescuentoMulta(multa.idMulta, nuevoDescuento)
-                    .enqueue(object : Callback<RespuestaBase> {
-                        override fun onResponse(call: Call<RespuestaBase>, response: Response<RespuestaBase>) {
-                            if (response.isSuccessful && response.body()?.success == true) {
-                                Toast.makeText(this@AsistenciaActivity, "Descuento actualizado con éxito", Toast.LENGTH_SHORT).show()
-                                d.dismiss()
-                                consultarYMostrarMulta(item, idActividad, nombreActividad)
-                            } else {
-                                Toast.makeText(this@AsistenciaActivity, "Error al actualizar descuento", Toast.LENGTH_SHORT).show()
-                            }
+                RetrofitClient.getApiService().registrarAsistencia(
+                    idActividad = idActividad,
+                    idAsociado = item.asociado.idAsociado,
+                    estado = item.estadoSeleccionado,
+                    montoMulta = cuota.montoOriginal,
+                    descuento = nuevoDescuento
+                ).enqueue(object : Callback<RespuestaBase> {
+                    override fun onResponse(call: Call<RespuestaBase>, response: Response<RespuestaBase>) {
+                        if (response.isSuccessful && (response.body()?.isSuccess == true || response.body()?.success == true || response.body()?.status == "success")) {
+                            Toast.makeText(this@AsistenciaActivity, "¡Descuento aplicado con éxito!", Toast.LENGTH_SHORT).show()
+                            consultarYMostrarMulta(item, idActividad, nombreActividad)
+                        } else {
+                            Toast.makeText(this@AsistenciaActivity, "Error al actualizar descuento", Toast.LENGTH_SHORT).show()
                         }
+                    }
 
-                        override fun onFailure(call: Call<RespuestaBase>, t: Throwable) {
-                            Toast.makeText(this@AsistenciaActivity, "Error de red: ${t.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    })
+                    override fun onFailure(call: Call<RespuestaBase>, t: Throwable) {
+                        Toast.makeText(this@AsistenciaActivity, "Error de red: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
             }
             .setNegativeButton("Cancelar") { d, _ -> d.dismiss() }
-            .create()
-
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_redondeado)
+            .show()
     }
 }

@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Colores para el Modo Claro -->
-    <color name="mi_color_primario">#1E88E5</color> <!-- azul -->
-    <color name="mi_color_fondo">#F0F2F5</color> <!-- fondo gris claro -->
+    <!-- NUEVOS COLORES (Modo Claro) -->
+    <color name="primary_green">#2E7D32</color> <!-- Verde oscuro profesional -->
+    <color name="primary_green_light">#4CAF50</color>
+    <color name="accent_blue">#1976D2</color>
 
-    <!-- Superficie blanca pura para tarjetas/diálogos sobre fondo gris -->
-    <color name="mi_color_tarjeta">#FFFFFF</color>
+    <!-- Fondos y Superficies -->
+    <color name="background_gray">#F2F2F7</color> <!-- Gris muy claro para el fondo (estilo iOS/Moderno) -->
+    <color name="surface_white">#FFFFFF</color> <!-- Blanco puro para las tarjetas -->
 
-    <!-- Color de texto principal casi negro para lectura clara -->
-    <color name="mi_color_texto_principal">#212121</color>
+    <!-- Textos -->
+    <color name="text_primary">#212121</color> <!-- Casi negro para textos (mejor lectura) -->
+    <color name="text_secondary">#757575</color> <!-- Gris para textos secundarios -->
+    <color name="danger_red">#D32F2F</color>
+    <color name="white">#FFFFFF</color>
+    <color name="warning_orange">#FB8C00</color>
+
+    <!-- COLORES ANTIGUOS (Se mantienen para que las pantallas viejas no crasheen) -->
+    <color name="mi_color_primario">#4CAF50</color>
+    <color name="mi_color_fondo">#FFFFFF</color>
+    <color name="mi_color_tarjeta">#F5F5F5</color>
+    <color name="mi_color_texto_principal">#000000</color>
 </resources>

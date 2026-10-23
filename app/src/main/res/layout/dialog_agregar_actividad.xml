@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Nombre de la actividad"
-        app:boxStrokeColor="@color/mi_color_primario"
-        app:hintTextColor="@color/mi_color_primario"
+        app:boxStrokeColor="@color/primary_green"
+        app:hintTextColor="@color/primary_green"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusTopEnd="16dp"
@@ -27,6 +27,7 @@
             android:id="@+id/etNombreActividad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
             android:inputType="textCapCharacters" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -38,8 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Fecha (YYYY-MM-DD)"
-        app:boxStrokeColor="@color/mi_color_primario"
-        app:hintTextColor="@color/mi_color_primario"
+        app:boxStrokeColor="@color/primary_green"
+        app:hintTextColor="@color/primary_green"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusTopEnd="16dp"
@@ -49,6 +50,7 @@
             android:id="@+id/etFechaActividad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
             android:inputType="date" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,10 +62,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="Multa por falta"
-        app:boxStrokeColor="@color/mi_color_primario"
-        app:hintTextColor="@color/mi_color_primario"
+        app:boxStrokeColor="@color/primary_green"
+        app:hintTextColor="@color/primary_green"
         app:prefixText="S/ "
-        app:prefixTextColor="@color/mi_color_primario"
+        app:prefixTextColor="@color/text_primary"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusTopEnd="16dp"
@@ -73,6 +75,7 @@
             android:id="@+id/etMultaFalta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,10 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Multa por tardanza"
-        app:boxStrokeColor="@color/mi_color_primario"
-        app:hintTextColor="@color/mi_color_primario"
+        app:boxStrokeColor="@color/primary_green"
+        app:hintTextColor="@color/primary_green"
         app:prefixText="S/ "
-        app:prefixTextColor="@color/mi_color_primario"
+        app:prefixTextColor="@color/text_primary"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusTopEnd="16dp"
@@ -96,6 +99,7 @@
             android:id="@+id/etMultaTardanza"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 

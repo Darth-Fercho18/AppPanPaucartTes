@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Monto de Descuento"
-        app:boxStrokeColor="@color/mi_color_primario"
-        app:hintTextColor="@color/mi_color_primario"
-        app:prefixTextColor="@color/mi_color_primario"
+        app:boxStrokeColor="@color/primary_green"
+        app:hintTextColor="@color/primary_green"
+        app:prefixTextColor="@color/text_primary"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusTopEnd="16dp"
@@ -26,6 +26,7 @@
             android:id="@+id/etDescuentoDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
             android:inputType="numberDecimal" />
 
     </com.google.android.material.textfield.TextInputLayout>

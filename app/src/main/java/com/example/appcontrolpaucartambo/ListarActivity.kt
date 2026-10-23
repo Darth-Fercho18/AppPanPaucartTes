@@ -2,7 +2,9 @@ package com.example.appcontrolpaucartambo
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -13,23 +15,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Locale
 
 class ListarActivity : AppCompatActivity() {
 
     private lateinit var rvAsociados: RecyclerView
     private lateinit var spFiltroTipo: Spinner
+    private lateinit var etBuscarSocio: TextInputEditText
 
-    // Listas para manejar los datos completos, los tipos de socio y la lista filtrada actual
     private var listaCompleta: List<Asociado> = emptyList()
     private var listaTiposSocio: List<TipoSocio> = emptyList()
-
-    // Variable para rastrear la lista filtrada que se está mostrando en el RecyclerView
     private var listaFiltradaActual: List<Asociado> = emptyList()
+
+    private var scrollState: Parcelable? = null
+    private var restaurarScrollPendiente = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,7 @@ class ListarActivity : AppCompatActivity() {
 
         rvAsociados = findViewById(R.id.rvAsociados)
         spFiltroTipo = findViewById(R.id.spFiltroTipo)
+        etBuscarSocio = findViewById(R.id.etBuscarSocio)
 
         rvAsociados.layoutManager = LinearLayoutManager(this)
 
@@ -46,16 +50,26 @@ class ListarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // --- GESTOR DE DESLIZAMIENTO PARA EDITAR ---
-        configurarSwipeEditar()
+        etBuscarSocio.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                filtrarLista(spFiltroTipo.selectedItemPosition)
+            }
+        })
 
-        // Cargar primero los tipos de socio y luego los asociados
+        configurarSwipeEditar()
         cargarTiposSocio()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scrollState = rvAsociados.layoutManager?.onSaveInstanceState()
     }
 
     override fun onResume() {
         super.onResume()
-        // Recarga los datos desde la base de datos para mostrar al nuevo o editado socio
+        restaurarScrollPendiente = true
         cargarDatosDesdeApi()
     }
 
@@ -66,19 +80,15 @@ class ListarActivity : AppCompatActivity() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                return false // No manejamos reordenamiento
+                return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-
-                // Notificar al adaptador para regresar el ítem a su lugar visualmente
                 rvAsociados.adapter?.notifyItemChanged(position)
 
                 if (position != RecyclerView.NO_POSITION && position < listaFiltradaActual.size) {
                     val asociadoAEditar = listaFiltradaActual[position]
-
-                    // Abrir la pantalla de formulario pasando los datos del asociado
                     val intent = Intent(this@ListarActivity, AgregarAsociadoActivity::class.java)
                     intent.putExtra("ASOCIADO_EDITAR", asociadoAEditar)
                     startActivity(intent)
@@ -117,7 +127,7 @@ class ListarActivity : AppCompatActivity() {
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
                 } else {
-                    Toast.makeText(this@ListarActivity, "Error al obtener tipos de socio", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ListarActivity, "Error al obtener tipos de integrante", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -128,19 +138,12 @@ class ListarActivity : AppCompatActivity() {
     }
 
     private fun cargarDatosDesdeApi() {
-        // Usamos el cliente global, que ya apunta a "https://sistemworld.com/api/"
         val apiService = RetrofitClient.getApiService()
 
         apiService.getAsociados().enqueue(object : Callback<List<Asociado>> {
             override fun onResponse(call: Call<List<Asociado>>, response: Response<List<Asociado>>) {
                 if (response.isSuccessful) {
                     listaCompleta = response.body()?.sortedBy { it.idAsociado } ?: emptyList()
-
-                    listaCompleta.forEach { asociado ->
-                        Log.d("PRUEBA_TIPO", "Nombre: ${asociado.nombres} | idTipo leído: ${asociado.idTipo}")
-                    }
-
-                    // Aplicar el filtro actual al recibir los asociados
                     filtrarLista(spFiltroTipo.selectedItemPosition)
                 } else {
                     Toast.makeText(this@ListarActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -154,7 +157,9 @@ class ListarActivity : AppCompatActivity() {
     }
 
     private fun filtrarLista(posicion: Int) {
-        listaFiltradaActual = if (posicion == 0) {
+        val query = etBuscarSocio.text.toString().trim().lowercase(Locale.ROOT)
+
+        val filtradosPorTipo = if (posicion == 0) {
             listaCompleta
         } else {
             if (listaTiposSocio.isNotEmpty() && (posicion - 1) < listaTiposSocio.size) {
@@ -165,6 +170,24 @@ class ListarActivity : AppCompatActivity() {
             }
         }
 
-        rvAsociados.adapter = AsociadoAdapter(listaFiltradaActual)
+        listaFiltradaActual = if (query.isEmpty()) {
+            filtradosPorTipo
+        } else {
+            filtradosPorTipo.filter { socio ->
+                val nombreCompleto = "${socio.nombres} ${socio.apellidoPaterno} ${socio.apellidoMaterno}".lowercase(Locale.ROOT)
+                val dni = socio.dni.lowercase(Locale.ROOT)
+                nombreCompleto.contains(query) || dni.contains(query)
+            }
+        }
+
+        rvAsociados.adapter = AsociadoAdapter(listaFiltradaActual) { socioSeleccionado ->
+            Toast.makeText(this@ListarActivity, "Módulo de cobro para: ${socioSeleccionado.nombres}", Toast.LENGTH_SHORT).show()
+        }
+
+        if (restaurarScrollPendiente && scrollState != null) {
+            rvAsociados.layoutManager?.onRestoreInstanceState(scrollState)
+            scrollState = null
+            restaurarScrollPendiente = false
+        }
     }
 }

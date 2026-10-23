@@ -1,71 +1,255 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center_horizontal"
     android:fitsSystemWindows="true"
-    android:background="?android:attr/windowBackground">
+    android:background="@color/background_gray">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="¡Bienvenido!"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="?attr/colorPrimary"
-        android:layout_marginTop="32dp" />
+    <!-- Scroll para el contenido principal -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Control Paucartambo"
-        android:textSize="18sp"
-        android:textColor="?attr/colorOnSurface"
-        android:layout_marginBottom="40dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <!-- Botón 1: Listar -->
-    <Button
-        android:id="@+id/btnListar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Listar Asociados"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:textColor="?attr/colorOnPrimary"
-        android:backgroundTint="?attr/colorPrimary" />
+            <!-- Cabecera de Tesorería -->
+            <TextView
+                android:id="@+id/tvTituloHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panel de Tesorería"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-    <!-- Botón 2: Asistencia -->
-    <Button
-        android:id="@+id/btnAsistencia"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Asistencia"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:textColor="?attr/colorOnPrimary"
-        android:backgroundTint="?attr/colorPrimary" />
+            <TextView
+                android:id="@+id/tvSubtituloHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gestión de cobros y asistencias"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
 
-    <!-- Botón 3: Registro de Ingresos y Egresos -->
-    <Button
-        android:id="@+id/btnIngresosEgresos"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Registro de Ingresos y Egresos"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:textColor="?attr/colorOnPrimary"
-        android:backgroundTint="?attr/colorPrimary" />
+            <!-- Card Resumen Financiero -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
 
-    <!-- Botón 4: Placeholder -->
-    <Button
-        android:id="@+id/btnPlaceholder"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Placeholder"
-        android:textSize="16sp"
-        android:textColor="?attr/colorOnPrimary"
-        android:backgroundTint="?attr/colorOutline" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-</LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="RESUMEN FINANCIERO"
+                        android:textColor="@color/primary_green"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Soles (S/)"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalGeneralSoles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="S/ 0.00"
+                                android:textColor="@color/primary_green"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Dólares ($)"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalGeneralDolares"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$ 0.00"
+                                android:textColor="@color/accent_blue"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Separador -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/background_gray"
+                        android:layout_marginVertical="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Saldos por Entidad Bancaria"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Contenedor dinámico para saldos por banco -->
+                    <LinearLayout
+                        android:id="@+id/layoutSaldosPorBanco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sección Acciones Rápidas -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Operaciones Rápidas"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="3"
+                android:alignmentMode="alignMargins">
+
+                <!-- Botón: Asistencia -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAsistencia"
+                    android:layout_width="0dp"
+                    android:layout_height="96dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:padding="6dp"
+                    android:gravity="center"
+                    android:text="Asistencia"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="@color/primary_green" />
+
+                <!-- Botón: Registrar Cobro -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrarCobro"
+                    android:layout_width="0dp"
+                    android:layout_height="96dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:padding="6dp"
+                    android:gravity="center"
+                    android:text="Registrar Cobro"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="@color/accent_blue" />
+
+                <!-- Botón: C. Extraordinarias -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAsignarMulta"
+                    android:layout_width="0dp"
+                    android:layout_height="96dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:padding="6dp"
+                    android:gravity="center"
+                    android:text="Extraordinarias"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="@color/warning_orange" />
+
+                <!-- Botón: Padrón de Integrantes -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnListarSocios"
+                    android:layout_width="0dp"
+                    android:layout_height="96dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:padding="6dp"
+                    android:gravity="center"
+                    android:text="Padrón Integrantes"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="@color/primary_green_light" />
+
+                <!-- Botón: Ingresos / Egresos -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMovimientos"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_columnWeight="1"
+                    android:layout_columnSpan="2"
+                    android:layout_margin="4dp"
+                    android:padding="6dp"
+                    android:gravity="center"
+                    android:text="Ingresos y Egresos"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="@color/primary_green" />
+            </GridLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

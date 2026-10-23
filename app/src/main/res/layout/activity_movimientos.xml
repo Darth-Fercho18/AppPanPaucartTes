@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/background_gray">
+
+    <!-- Cabecera Verde -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_green"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrar Ingreso / Egreso"
+            android:textColor="@color/surface_white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- TARJETA 1: TIPO DE MOVIMIENTO -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TIPO DE MOVIMIENTO"
+                        android:textColor="@color/primary_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerTipoMovimiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:minHeight="48dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TARJETA 2: CUENTA BANCARIA -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ENTIDAD BANCARIA / CUENTA"
+                        android:textColor="@color/primary_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerCuentaBancaria"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:minHeight="48dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TARJETA 3: DETALLES DEL MOVIMIENTO -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surface_white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DETALLES"
+                        android:textColor="@color/primary_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Categoría -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Categoría (Ej: GENERAL, GASTO, PAGO)"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCategoria"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="GENERAL"
+                            android:textColor="@color/text_primary"
+                            android:inputType="textCapCharacters" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Concepto -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Concepto / Descripción"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etConcepto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:inputType="textCapSentences" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Monto -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilMonto"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Monto (S/)"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etMonto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary_green"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Integrante / Nombre -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Integrante / Nombre (Opcional)"
+                        app:boxStrokeColor="@color/primary_green"
+                        app:hintTextColor="@color/primary_green">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actvAsociado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botón Registrar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegistrarMovimiento"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="REGISTRAR MOVIMIENTO"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/primary_green"
+                app:cornerRadius="12dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
